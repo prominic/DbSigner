@@ -102,8 +102,8 @@ public class App extends JavaServerAddin {
 			noteid = nc.getNextNoteID(noteid);
 		}
 
-		database.recycle();
 		logMessage(database.getTitle().concat(" - has been signed (").concat(String.valueOf(nc.getCount())) + " design elements)");
+		database.recycle();
 	}
 
 	/**

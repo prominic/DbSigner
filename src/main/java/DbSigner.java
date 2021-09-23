@@ -1,15 +1,11 @@
-package net.prominic.DbSigner;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.NoteCollection;
@@ -18,7 +14,7 @@ import lotus.domino.NotesFactory;
 import lotus.domino.Session;
 import lotus.notes.addins.JavaServerAddin;
 
-public class App extends JavaServerAddin {
+public class DbSigner extends JavaServerAddin {
 	// Constants
 	private final String		JADDIN_NAME				= "DbSigner";
 	private final String		JADDIN_VERSION			= "0.1.0 (sign all design elements in database)";
@@ -30,11 +26,11 @@ public class App extends JavaServerAddin {
 	private int 			dominoTaskID			= 0;
 
 	// constructor if parameters are provided
-	public App(String[] args) {
+	public DbSigner(String[] args) {
 		this.args = args;
 	}
 
-	public App() {}
+	public DbSigner() {}
 
 	/* the runNotes method, which is the main loop of the Addin */
 	@Override

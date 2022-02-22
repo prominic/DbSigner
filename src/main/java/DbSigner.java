@@ -14,7 +14,7 @@ public class DbSigner extends JavaServerAddin {
 	// Constants
 	private final String		JADDIN_NAME				= "DbSigner";
 	private final String		JADDIN_VERSION			= "0.2.0 (sign all design elements in a database)";
-	private final String		JADDIN_DATE				= "2022-02-22 23:00";
+	private final String		JADDIN_DATE				= "2022-02-22 23:30";
 
 	// MessageQueue Constants
 	// Message Queue name for this Addin (normally uppercase);
@@ -138,11 +138,13 @@ public class DbSigner extends JavaServerAddin {
 				logMessage("database not found: " + filePath);
 				return;
 			}
-			logMessage(database.getTitle().concat(" - is going to be signed (please wait a bit)"));
+			logMessage(database.getTitle().concat(" - initialized"));
 
 			NoteCollection nc = database.createNoteCollection(false);
 			nc.selectAllDesignElements(true);
 			nc.buildCollection();
+
+			logMessage(database.getTitle().concat(" - design elements to sign: " + String.valueOf(nc.getCount())));
 
 			String noteid = nc.getFirstNoteID();
 			while (noteid.length() > 0) {

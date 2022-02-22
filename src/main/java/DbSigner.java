@@ -140,7 +140,8 @@ public class DbSigner extends JavaServerAddin {
 			}
 			logMessage(database.getTitle().concat(" - is going to be signed (please wait a bit)"));
 
-			NoteCollection nc = database.createNoteCollection(true);
+			NoteCollection nc = database.createNoteCollection(false);
+			nc.selectAllDesignElements(true);
 			nc.buildCollection();
 
 			String noteid = nc.getFirstNoteID();

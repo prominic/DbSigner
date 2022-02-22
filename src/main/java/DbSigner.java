@@ -14,7 +14,7 @@ public class DbSigner extends JavaServerAddin {
 	// Constants
 	private final String		JADDIN_NAME				= "DbSigner";
 	private final String		JADDIN_VERSION			= "0.2.0 (sign all design elements in a database)";
-	private final String		JADDIN_DATE				= "2022-02-22 16:30";
+	private final String		JADDIN_DATE				= "2022-02-22 23:00";
 
 	// MessageQueue Constants
 	// Message Queue name for this Addin (normally uppercase);
@@ -104,7 +104,7 @@ public class DbSigner extends JavaServerAddin {
 		else if ("info".equals(cmd)) {
 			showInfo();
 		}
-		else if (cmd.startsWith("sign")) {
+		else if (cmd.length()>0) {
 			sign(cmd);
 		}
 		else {
@@ -126,23 +126,16 @@ public class DbSigner extends JavaServerAddin {
 		AddInLogMessageText("   quit             Unload DbSigner");
 		AddInLogMessageText("   help             Show help information (or -h)");
 		AddInLogMessageText("   info             Show version and more of DbSigner");
-		AddInLogMessageText("   sign <filepath>  Sign all design elements in filepath");
+		AddInLogMessageText("   <filepath>       Sign all design elements in filepath");
 		AddInLogMessageText("Copyright (C) Prominic.NET, Inc. 2021" + (year > 2021 ? " - " + Integer.toString(year) : ""));
 		AddInLogMessageText("See https://prominic.net for more details.");
 	}
 
-	private void sign(String cmd) {
+	private void sign(String filePath) {
 		try {
-
-			String[] optArr = cmd.split("\\s+");
-			if (optArr.length < 2) {
-				logMessage("sign command should follow with <filepath> as a parameter, see help for more information");
-				return;
-			}
-
-			Database database = m_session.getDatabase(null, optArr[1]);
-			if (database == null) {
-				logMessage("database not found: " + optArr[1]);
+			Database database = m_session.getDatabase(null, filePath);
+			if (database == null || !database.isOpen()) {
+				logMessage("database not found: " + filePath);
 				return;
 			}
 			logMessage(database.getTitle().concat(" - is going to be signed (please wait a bit)"));

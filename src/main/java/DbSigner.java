@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -13,8 +15,8 @@ import lotus.notes.internal.MessageQueue;
 public class DbSigner extends JavaServerAddin {
 	// Constants
 	private final String		JADDIN_NAME				= "DbSigner";
-	private final String		JADDIN_VERSION			= "0.2.0 (sign all design elements in a database)";
-	private final String		JADDIN_DATE				= "2022-02-22 23:30";
+	private final String		JADDIN_VERSION			= "0.2.0 (working version)";
+	private final String		JADDIN_DATE				= "2022-02-23 14:30";
 
 	// MessageQueue Constants
 	// Message Queue name for this Addin (normally uppercase);
@@ -88,9 +90,24 @@ public class DbSigner extends JavaServerAddin {
 
 				// check messages for Genesis
 				String cmd = qBuffer.toString().trim();
+
 				if (!cmd.isEmpty()) {
 					resolveMessageQueueState(cmd);
 				};
+
+				BufferedReader reader = new BufferedReader(new FileReader("JavaAddin\\DbSigner.txt"));
+				String line = reader.readLine();
+				while (line != null) {
+					System.out.println(line);
+					
+					if (!line.isEmpty()) {
+						resolveMessageQueueState(cmd);
+					}
+					
+					// read next line
+					line = reader.readLine();
+				}
+				reader.close();
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -217,6 +234,10 @@ public class DbSigner extends JavaServerAddin {
 			if (this.m_session != null) {
 				this.m_session.recycle();
 				this.m_session = null;
+			}
+			if (this.mq != null) {
+				this.mq.close(0);
+				this.mq = null;
 			}
 
 			logMessage("UNLOADED (OK) " + JADDIN_VERSION);

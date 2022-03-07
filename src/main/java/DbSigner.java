@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Calendar;
 
 import lotus.domino.Database;
@@ -14,51 +13,31 @@ public class DbSigner extends JavaServerAddinGenesis {
 	
 	@Override
 	protected String getJavaAddinVersion() {
-		return "0.3.0 (base class)";
+		return "0.4.3";
 	}
 	
 	@Override
 	protected String getJavaAddinDate() {
-		return "2022-03-01 14:30";
+		return "2022-03-07 20:30";
 	}
 
-	@Override
-	protected String getCmdFileName() {
-		return "dbsigner.txt";
+	protected boolean resolveMessageQueueState(String cmd) {
+		boolean flag = super.resolveMessageQueueState(cmd);
+		if (flag) return true;
+
+		sign(cmd);
+		return true;
 	}
 
-	protected void resolveMessageQueueState(String cmd) {
-		if ("-h".equals(cmd) || "help".equals(cmd)) {
-			showHelp();
-		}
-		else if ("info".equals(cmd)) {
-			showInfo();
-		}
-		else if ("quit".equals(cmd)) {
-			quit();
-		}
-		else if (cmd.length()>0) {
-			sign(cmd);
-		}
-		else {
-			logMessage("Command is not recognized (use -h or help to get details)");
-		}
-	}
-
-	protected void showInfo() {
-		logMessage("version      " + this.getJavaAddinName());
-		logMessage("date         " + this.getJavaAddinDate());
-		logMessage("parameters   " + Arrays.toString(this.args));
-	}
-
-	private void showHelp() {
+	protected void showHelp() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		logMessage("*** Usage ***");
 		AddInLogMessageText("load runjava DbSigner");
 		AddInLogMessageText("tell DbSigner <command>");
-		AddInLogMessageText("   quit             Unload DbSigner");
+		AddInLogMessageText("   quit             Unload addin");
 		AddInLogMessageText("   help             Show help information (or -h)");
-		AddInLogMessageText("   info             Show version and more of DbSigner");
+		AddInLogMessageText("   info             Show version and more");
+		AddInLogMessageText("   reload           Restart the addin");
 		AddInLogMessageText("   <filepath>       Sign all design elements in filepath");
 		AddInLogMessageText("Copyright (C) Prominic.NET, Inc. 2021" + (year > 2021 ? " - " + Integer.toString(year) : ""));
 		AddInLogMessageText("See https://prominic.net for more details.");

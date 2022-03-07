@@ -1,7 +1,13 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
+import lotus.domino.Database;
 import lotus.domino.NotesException;
 import lotus.domino.NotesFactory;
 import lotus.domino.Session;
@@ -16,9 +22,13 @@ abstract class JavaServerAddinGenesis extends JavaServerAddin {
 	protected static final int 	MQ_MAX_MSGSIZE 			= 1024;
 	protected MessageQueue 		mq						= null;
 	protected Session 			m_session				= null;
-
+	protected Database			m_ab					= null;
+	protected String			m_javaAddinRootFolder	= null;
+	protected String			m_javaAddinCommand		= null;
 	protected String[] 			args 					= null;
 	private int 				dominoTaskID			= 0;
+	
+	private static final String COMMAND_FILE_NAME		= "command.txt";
 
 	// constructor if parameters are provided
 	public JavaServerAddinGenesis(String[] args) {
@@ -30,10 +40,8 @@ abstract class JavaServerAddinGenesis extends JavaServerAddin {
 	protected abstract String getJavaAddinName();
 	protected abstract String getJavaAddinVersion();
 	protected abstract String getJavaAddinDate();
-	protected abstract void showInfo();
-	protected abstract void resolveMessageQueueState(String cmd);
-	protected abstract String getCmdFileName();
-	
+	protected abstract void showHelp();
+
 	protected String getQName() {
 		return MSG_Q_PREFIX + getJavaAddinName().toUpperCase();
 	}
@@ -48,12 +56,59 @@ abstract class JavaServerAddinGenesis extends JavaServerAddin {
 		this.dominoTaskID = createAddinStatusLine(this.getJavaAddinName());
 
 		try {
+			runNotesBeforeInitialize();
+			
 			m_session = NotesFactory.createSession();
+			m_ab = m_session.getDatabase(m_session.getServerName(), "names.nsf");
 
+			String javaAddinFolder = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+			m_javaAddinRootFolder = javaAddinFolder.substring(0, javaAddinFolder.indexOf("javaaddin") + "javaaddin".length());
+			m_javaAddinCommand = javaAddinFolder + File.separator + COMMAND_FILE_NAME;
+			logMessage(m_javaAddinCommand);
+			
+			ProgramConfig pc = new ProgramConfig(this.getJavaAddinName(), this.args);
+			pc.setState(m_ab, ProgramConfig.LOAD);		// set program documents in LOAD state
+			
 			showInfo();
-
+			
 			listen();
 		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void runNotesBeforeInitialize() {}
+
+	// scan JavaAddin folder for sub-folders and adjust command.txt file with reload command
+	public void restart() {
+		File file = new File(m_javaAddinRootFolder);
+		String[] directories = file.list(new FilenameFilter() {
+		  @Override
+		  public boolean accept(File current, String name) {
+		    return new File(current, name).isDirectory();
+		  }
+		});
+		
+		for(int i=0; i<directories.length; i++) {
+			File f = new File(m_javaAddinRootFolder + File.separator + directories[i] + File.separator + COMMAND_FILE_NAME);
+			sendCommand(f, "reload");
+		}
+	}
+	
+	public void reload() {
+		ProgramConfig pc = new ProgramConfig(this.getJavaAddinName(), this.args);
+		pc.setState(m_ab, ProgramConfig.UNLOAD);		// set program documents in UNLOAD state
+		this.stopAddin();
+	}
+	
+	private void sendCommand(File file, String cmd) {
+		try {
+			PrintWriter writer = new PrintWriter(file, "UTF-8");
+			writer.println(cmd);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}
@@ -98,7 +153,8 @@ abstract class JavaServerAddinGenesis extends JavaServerAddin {
 				};
 
 				// execute commands from file
-				File file = new File(this.getCmdFileName());
+				File file = new File(m_javaAddinCommand);
+				logMessage(String.valueOf(file.exists()));
 				if (file.exists()) {
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					String line;
@@ -118,7 +174,40 @@ abstract class JavaServerAddinGenesis extends JavaServerAddin {
 			e.printStackTrace();
 		}
 	}
+	
+	protected boolean resolveMessageQueueState(String cmd) {
+		boolean flag = false;
+		
+		if ("-h".equals(cmd) || "help".equals(cmd)) {
+			showHelp();
+			flag = true;
+		}
+		else if ("info".equals(cmd)) {
+			showInfo();
+			flag = true;
+		}
+		else if ("quit".equals(cmd)) {
+			quit();
+			flag = true;
+		}
+		else if ("reload".equals(cmd)) {
+			reload();
+			flag = true;
+		}
+		else if ("restart".equals(cmd)) {
+			restart();
+			flag = true;
+		}
+		
+		return flag;
+	}
 
+	protected void showInfo() {
+		logMessage("version      " + this.getJavaAddinName());
+		logMessage("date         " + this.getJavaAddinDate());
+		logMessage("parameters   " + Arrays.toString(this.args));
+	}
+	
 	protected void quit() {
 		this.stopAddin();
 	}

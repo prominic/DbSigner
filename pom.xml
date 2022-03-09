@@ -5,7 +5,7 @@
 	<groupId>net.prominic.DbSigner</groupId>
 	<artifactId>DbSigner</artifactId>
 	<packaging>jar</packaging>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<name>DbSigner</name>
 	<url>http://maven.apache.org</url>
 

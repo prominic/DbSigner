@@ -13,12 +13,12 @@ public class DbSigner extends JavaServerAddinGenesis {
 	
 	@Override
 	protected String getJavaAddinVersion() {
-		return "0.4.6";
+		return "0.4.7";
 	}
 	
 	@Override
 	protected String getJavaAddinDate() {
-		return "2022-03-09 16:05";
+		return "2022-03-09 18:05";
 	}
 
 	protected boolean resolveMessageQueueState(String cmd) {

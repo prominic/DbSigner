@@ -1,5 +1,3 @@
-import java.util.Calendar;
-
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.NoteCollection;
@@ -7,18 +5,13 @@ import lotus.domino.NotesException;
 
 public class DbSigner extends JavaServerAddinGenesis {
 	@Override
-	protected String getJavaAddinName() {
-		return "DbSigner";
-	}
-	
-	@Override
 	protected String getJavaAddinVersion() {
-		return "0.4.7";
+		return "0.4.8";
 	}
 	
 	@Override
 	protected String getJavaAddinDate() {
-		return "2022-03-09 18:05";
+		return "2022-03-14 18:05";
 	}
 
 	protected boolean resolveMessageQueueState(String cmd) {
@@ -29,18 +22,9 @@ public class DbSigner extends JavaServerAddinGenesis {
 		return true;
 	}
 
-	protected void showHelp() {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		logMessage("*** Usage ***");
-		AddInLogMessageText("load runjava DbSigner");
-		AddInLogMessageText("tell DbSigner <command>");
-		AddInLogMessageText("   quit             Unload addin");
-		AddInLogMessageText("   help             Show help information (or -h)");
-		AddInLogMessageText("   info             Show version and more");
-		AddInLogMessageText("   reload           Restart the addin");
+	@Override
+	protected void showHelpExt() {
 		AddInLogMessageText("   <filepath>       Sign all design elements in filepath");
-		AddInLogMessageText("Copyright (C) Prominic.NET, Inc. 2021" + (year > 2021 ? " - " + Integer.toString(year) : ""));
-		AddInLogMessageText("See https://prominic.net for more details.");
 	}
 
 	private void sign(String filePath) {

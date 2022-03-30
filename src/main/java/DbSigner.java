@@ -2,16 +2,17 @@ import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.NoteCollection;
 import lotus.domino.NotesException;
+import net.prominic.gja_v20220330.JavaServerAddinGenesis;
 
 public class DbSigner extends JavaServerAddinGenesis {
 	@Override
 	protected String getJavaAddinVersion() {
-		return "0.4.8";
+		return "0.4.10";
 	}
 	
 	@Override
 	protected String getJavaAddinDate() {
-		return "2022-03-14 18:05";
+		return "2022-03-30 18:05";
 	}
 
 	protected boolean resolveMessageQueueState(String cmd) {

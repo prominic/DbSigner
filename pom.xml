@@ -3,7 +3,7 @@
 	<groupId>net.prominic.DbSigner</groupId>
 	<artifactId>DbSigner</artifactId>
 	<packaging>jar</packaging>
-	<version>0-4-11</version>
+	<version>0-4-12</version>
 	<name>DbSigner</name>
 	<url>http://maven.apache.org</url>
 
@@ -60,14 +60,14 @@
 		<dependency>
 			<groupId>net.prominic</groupId>
 			<artifactId>gja</artifactId>
-			<version>2022-04-05</version>
+			<version>2022-05-11</version>
 		</dependency>
 
 	</dependencies>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 </project>

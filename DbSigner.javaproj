@@ -3,7 +3,7 @@
     <option settingsFilePath=""/>
     <option dominoNotesPlatform=""/>
     <option commandLine="clean package"/>
-    <option mavenBuildPath="/Users/joelanderson/Documents/Flex/temp_workspace/DbSigner"/>
+    <option mavenBuildPath=""/>
     <option dominoNotesProgram=""/>
     <actions>
       <action actionName="Build" action="install"/>

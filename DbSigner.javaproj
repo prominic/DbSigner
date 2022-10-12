@@ -1,0 +1,27 @@
+<project>
+  <mavenBuild>
+    <option settingsFilePath=""/>
+    <option dominoNotesPlatform=""/>
+    <option commandLine="clean package"/>
+    <option mavenBuildPath="/Users/joelanderson/Documents/Flex/temp_workspace/DbSigner"/>
+    <option dominoNotesProgram=""/>
+    <actions>
+      <action actionName="Build" action="install"/>
+      <action actionName="Clean and package" action="clean package"/>
+      <action actionName="Clean" action="clean"/>
+      <action actionName="Clean and Build" action="clean install"/>
+      <action actionName="Exploded" action="war:exploded"/>
+    </actions>
+  </mavenBuild>
+  <classpaths>
+    <class path="src/main/java"/>
+  </classpaths>
+  <build>
+    <option mainclass="DbSigner"/>
+    <option mainClassPath="null"/>
+  </build>
+  <options>
+    <option projectType=""/>
+    <option jdkType="jdk-8"/>
+  </options>
+</project>
